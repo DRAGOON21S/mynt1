@@ -3,63 +3,11 @@ import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
-  const [text, setText] = useState('');
-  const finalMessage = 'COMING SOON';
+  const [isLoaded, setIsLoaded] = useState(false);
   
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    let currentIndex = 0;
-    let iterations = 0;
-    let isStoppingAtFinal = false;
-    
-    const scramble = () => {
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,./<>?';
-      let result = '';
-      
-      for (let i = 0; i < finalMessage.length; i++) {
-        if (i <= currentIndex && iterations > 3) {
-          result += finalMessage[i];
-        } else {
-          result += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-      }
-      
-      setText(result);
-      
-      iterations++;
-      
-      // Regular incrementation of revealed characters
-      if (iterations > 3 && currentIndex < finalMessage.length - 1) {
-        if (iterations % 4 === 0) {
-          currentIndex++;
-        }
-      }
-      
-      // Check if we've fully revealed the final message
-      if (result === finalMessage && !isStoppingAtFinal) {
-        // Set flag to indicate we're stopping at final state
-        isStoppingAtFinal = true;
-        
-        // Wait for 10 seconds before restarting
-        timeout = setTimeout(() => {
-          currentIndex = 0;
-          iterations = 0;
-          isStoppingAtFinal = false;
-          scramble();
-        }, 10000); // 10 seconds
-        
-        return;
-      }
-      
-      // Continue with scramble if we're not in the paused state
-      if (!isStoppingAtFinal) {
-        timeout = setTimeout(scramble, 100);
-      }
-    };
-    
-    scramble();
-    
-    return () => clearTimeout(timeout);
+    // Mark component as loaded after a short delay to trigger animations
+    setTimeout(() => setIsLoaded(true), 500);
   }, []);
   
   return (
@@ -78,7 +26,16 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.headline}>MYNT STUDIO</h1>
         <div className={styles.contentWrapper}>
-          <h1 className={styles.title} data-text={text}>{text}</h1>
+          <div className={`${styles.scene} ${isLoaded ? styles.loaded : ''}`}>
+            <div className={styles.cube}>
+              <div className={`${styles.cubeFace} ${styles.front}`}>COMING</div>
+              <div className={`${styles.cubeFace} ${styles.back}`}>SOON</div>
+              <div className={`${styles.cubeFace} ${styles.top}`}>MYNT</div>
+              <div className={`${styles.cubeFace} ${styles.bottom}`}>STUDIO</div>
+              <div className={`${styles.cubeFace} ${styles.left}`}>IS</div>
+              <div className={`${styles.cubeFace} ${styles.right}`}>HERE</div>
+            </div>
+          </div>
         </div>
       </main>
     </div>
