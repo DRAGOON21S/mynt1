@@ -69,10 +69,17 @@ export default function Home() {
         <meta name="description" content="Something cryptic is coming" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="icon" href="/favicon.ico" />
+        <link
+          href="https://fonts.cdnfonts.com/css/monument-extended"
+          rel="stylesheet"
+        />
       </Head>
       
       <main className={styles.main}>
-        <h1 className={styles.title} data-text={text}>{text}</h1>
+        <h1 className={styles.headline}>MYNT STUDIO</h1>
+        <div className={styles.contentWrapper}>
+          <h1 className={styles.title} data-text={text}>{text}</h1>
+        </div>
       </main>
     </div>
   );
