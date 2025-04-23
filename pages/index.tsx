@@ -10,6 +10,7 @@ export default function Home() {
     let timeout: NodeJS.Timeout;
     let currentIndex = 0;
     let iterations = 0;
+    let isStoppingAtFinal = false;
     
     const scramble = () => {
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,./<>?';
@@ -27,18 +28,33 @@ export default function Home() {
       
       iterations++;
       
+      // Regular incrementation of revealed characters
       if (iterations > 3 && currentIndex < finalMessage.length - 1) {
         if (iterations % 4 === 0) {
           currentIndex++;
         }
       }
       
-      if (iterations > 3 && currentIndex >= finalMessage.length - 1 && iterations % 20 === 0) {
-        currentIndex = 0;
-        iterations = 0;
+      // Check if we've fully revealed the final message
+      if (result === finalMessage && !isStoppingAtFinal) {
+        // Set flag to indicate we're stopping at final state
+        isStoppingAtFinal = true;
+        
+        // Wait for 10 seconds before restarting
+        timeout = setTimeout(() => {
+          currentIndex = 0;
+          iterations = 0;
+          isStoppingAtFinal = false;
+          scramble();
+        }, 10000); // 10 seconds
+        
+        return;
       }
       
-      timeout = setTimeout(scramble, 100);
+      // Continue with scramble if we're not in the paused state
+      if (!isStoppingAtFinal) {
+        timeout = setTimeout(scramble, 100);
+      }
     };
     
     scramble();
@@ -55,7 +71,7 @@ export default function Home() {
       </Head>
       
       <main className={styles.main}>
-        <h1 className={styles.title}>{text}</h1>
+        <h1 className={styles.title} data-text={text}>{text}</h1>
       </main>
     </div>
   );
